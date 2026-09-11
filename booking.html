@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Form</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8fafc;
+      color: #111827;
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 18px 60px;
+    }
+    .panel {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(15,23,42,0.06);
+      padding: 28px;
+    }
+    h1, h2 {
+      margin-top: 0;
+    }
+    .intro {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 24px;
+      color: #1e3a8a;
+      font-weight: 700;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    label {
+      font-weight: 700;
+      color: #1f2937;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: #fff;
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+    .button-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+    button {
+      border: none;
+      background: linear-gradient(135deg,#2563eb,#1d4ed8);
+      color: white;
+      font-weight: 700;
+      padding: 14px 22px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .payment-modal { display:none; position:fixed; inset:0; z-index:10; padding:20px; background:rgba(15,23,42,.58); }
+    .payment-modal.open { display:grid; place-items:center; }
+    .payment-card { width:min(500px,100%); background:white; border-radius:18px; padding:28px; box-shadow:0 25px 70px rgba(15,23,42,.3); }
+    .payment-card p { color:#64748b; line-height:1.5; }
+    .methods { display:grid; gap:12px; margin:22px 0; }
+    .method { display:flex; gap:12px; align-items:center; cursor:pointer; border:1px solid #dbe3ed; border-radius:12px; padding:15px; }
+    .method:has(input:checked) { border-color:#2563eb; background:#eff6ff; }
+    .method input { width:auto; }
+    .method strong,.method small { display:block; }
+    .method small { color:#64748b; margin-top:3px; }
+    .payment-actions { display:flex; gap:12px; justify-content:flex-end; }.secondary { background:white; color:#334155; border:1px solid #cbd5e1; }
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <h1>QUESTIONNAIRE FOR KENYA STUDENTS VISIT TO DUBAI</h1>
+      <div class="intro">3rd to 10th December | Host: Dubai International Academy, Emirates Hills | Organized by DunesRun Sports</div>
+
+      <form id="booking-form">
+        <h2>Section A: Student Personal Information</h2>
+        <div class="grid">
+          <div class="field full"><label>Full Name (as on Passport)</label><input name="full_name" required></div>
+          <div class="field"><label>Date of Birth</label><input name="date_of_birth" type="date"></div>
+          <div class="field"><label>Gender</label><input name="gender"></div>
+          <div class="field"><label>School Name</label><input name="school_name"></div>
+          <div class="field"><label>Class / Form</label><input name="class_form"></div>
+          <div class="field"><label>Passport Number</label><input name="passport_number"></div>
+          <div class="field"><label>Passport Expiry Date</label><input name="passport_expiry" type="date"></div>
+          <div class="field"><label>Nationality</label><input name="nationality"></div>
+          <div class="field full"><label>Student Email / Phone</label><input name="student_contact"></div>
+        </div>
+
+        <h2>Section B: Parent / Guardian Information</h2>
+        <div class="grid">
+          <div class="field"><label>Parent / Guardian Name</label><input name="parent_name"></div>
+          <div class="field"><label>Relationship</label><input name="parent_relationship"></div>
+          <div class="field"><label>Phone Number (WhatsApp)</label><input name="parent_phone"></div>
+          <div class="field"><label>Email Address</label><input name="parent_email" type="email" required></div>
+          <div class="field full"><label>Alternative Emergency Contact & Number</label><input name="emergency_contact"></div>
+        </div>
+
+        <h2>Section C: Sports Profile</h2>
+        <div class="grid">
+          <div class="field full"><label>Sport(s) to compete in</label><input name="sports_choices" placeholder="Chess, Swimming, Football"></div>
+          <div class="field"><label>Current level</label><input name="current_level"></div>
+          <div class="field"><label>Achievements / medals / certificates</label><textarea name="achievements"></textarea></div>
+          <div class="field"><label>Own sports equipment / kit</label><input name="equipment"></div>
+          <div class="field"><label>Coaching club or academy</label><input name="coaching_club"></div>
+        </div>
+
+        <h2>Section D: Education & Culture Exchange</h2>
+        <div class="grid">
+          <div class="field full"><label>Why do you want to join this exchange program?</label><textarea name="motivation"></textarea></div>
+          <div class="field full"><label>What skill or cultural aspect of Kenya would you like to share in Dubai?</label><textarea name="cultural_aspect"></textarea></div>
+          <div class="field full"><label>What do you hope to learn / connect / explore in Dubai?</label><textarea name="learn_hope"></textarea></div>
+          <div class="field"><label>Have you travelled outside Kenya before?</label>
+            <select name="previous_travel">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+        </div>
+
+        <h2>Section E: Health, Medical & Diet</h2>
+        <div class="grid">
+          <div class="field full"><label>Any medical condition / allergies / asthma?</label><textarea name="medical_conditions"></textarea></div>
+          <div class="field full"><label>Are you on any current medication?</label><textarea name="medication"></textarea></div>
+          <div class="field"><label>Food allergies / dietary restrictions</label><input name="dietary_restrictions"></div>
+          <div class="field"><label>Swimming ability</label><input name="swimming_ability"></div>
+          <div class="field"><label>Travel / medical insurance?</label>
+            <select name="insurance">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+        </div>
+
+        <h2>Section F: Travel & Logistics</h2>
+        <div class="grid">
+          <div class="field"><label>Do you have a valid Kenyan Birth Certificate?</label>
+            <select name="birth_certificate">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+          <div class="field"><label>Passport status</label><input name="passport_status" placeholder="Ready / In Process / Need Assistance"></div>
+          <div class="field"><label>Parent Consent for travel</label>
+            <select name="parent_consent">
+              <option value="false">Pending</option>
+              <option value="true">Granted</option>
+            </select>
+          </div>
+          <div class="field"><label>T-shirt size</label><input name="tshirt_size"></div>
+          <div class="field"><label>Shoe size</label><input name="shoe_size"></div>
+          <div class="field"><label>Who will cater for trip cost?</label><input name="payer"></div>
+          <div class="field full"><label>How did you hear about this program?</label><input name="heard_about"></div>
+        </div>
+
+        <h2>Section G: Parent Declaration</h2>
+        <div class="field full">
+          <label><input type="checkbox" name="parent_declaration" value="true" /> I authorize my child to travel to Dubai from 3rd - 10th Dec for the Exchange Program and participate in sports.</label>
+        </div>
+
+        <div class="grid">
+          <div class="field"><label>Currency</label>
+            <select name="currency">
+              <option value="KSH">KSH</option>
+              <option value="USD">USD</option>
+            </select>
+          </div>
+          <div class="field"><label>Amount</label><input name="amount" value="330000"></div>
+        </div>
+
+        <input type="hidden" name="event_id" value="1" />
+
+        <div class="field full">
+          <label>Payment method</label>
+          <div class="methods">
+            <label class="method"><input type="radio" name="payment_method" value="mpesa" checked><span><strong>M-Pesa STK Push</strong><small>Get an M-Pesa PIN prompt on the parent/guardian phone number entered above.</small></span></label>
+            <label class="method"><input type="radio" name="payment_method" value="bank_transfer"><span><strong>Bank transfer</strong><small>View secure Paystack transfer instructions and account details.</small></span></label>
+          </div>
+        </div>
+        <div class="button-row">
+          <button id="proceed-payment" type="submit">Proceed to Pay</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // The Django API origin. Set window.NGAO_API_BASE before this script in
+    // production, or change this value to your deployed HTTPS API URL.
+    // Do not open this file with file://; serve the admin/ folder over HTTP.
+    const API_BASE = window.NGAO_API_BASE || 'http://127.0.0.1:8000';
+    const bookingForm = document.getElementById('booking-form');
+    const proceedButton = document.getElementById('proceed-payment');
+    const parentPhone = bookingForm.elements.parent_phone;
+    const paymentMethods = bookingForm.querySelectorAll('input[name="payment_method"]');
+    function updatePaymentRequirements() {
+      const isMpesa = bookingForm.elements.payment_method.value === 'mpesa';
+      parentPhone.required = isMpesa;
+      parentPhone.placeholder = isMpesa ? 'e.g. 0712 345 678 (required for STK Push)' : 'Phone number (optional for bank transfer)';
+    }
+    paymentMethods.forEach(method => method.addEventListener('change', updatePaymentRequirements));
+    updatePaymentRequirements();
+    bookingForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (!bookingForm.reportValidity()) return;
+      const form = new FormData(bookingForm);
+      const payload = Object.fromEntries(form.entries());
+      payload.previous_travel = payload.previous_travel === 'true';
+      payload.insurance = payload.insurance === 'true';
+      payload.birth_certificate = payload.birth_certificate === 'true';
+      payload.parent_consent = payload.parent_consent === 'true';
+      payload.parent_declaration = form.get('parent_declaration') === 'true';
+
+      proceedButton.disabled = true;
+      proceedButton.textContent = payload.payment_method === 'mpesa' ? 'Sending M-Pesa prompt…' : 'Opening bank transfer…';
+      try {
+        const response = await fetch(`${API_BASE}/api/book/`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+        });
+        const contentType = response.headers.get('content-type') || '';
+        const json = contentType.includes('application/json') ? await response.json() : null;
+        if (!response.ok) {
+          // A Django debug/404 page is HTML, not JSON. Keep its markup out of
+          // the user-facing error and give an actionable endpoint message.
+          throw new Error(json?.error || `Payment API returned ${response.status}. Check that Django is running the NgaoSports backend on port 8000.`);
+        }
+        if (!json) throw new Error('Payment API returned an unexpected response.');
+        if (json.authorization_url) {
+          window.location.href = json.authorization_url;
+        } else if (payload.payment_method === 'mpesa' && json.reference) {
+          showPaymentPending(json);
+        } else {
+          throw new Error(json.error || 'Could not initialize payment');
+        }
+      } catch (err) {
+        console.error(err);
+        alert(err.message || 'Payment initialization failed.');
+        proceedButton.disabled = false;
+        proceedButton.textContent = 'Proceed to Pay';
+      }
+    });
+
+    function showPaymentPending(payment) {
+      const panel = document.querySelector('.panel');
+      panel.innerHTML = `
+        <div class="intro"><strong>Check your phone</strong><br>${payment.display_text || 'An M-Pesa STK Push has been sent. Enter your M-Pesa PIN to complete payment.'}</div>
+        <h1>Waiting for M-Pesa confirmation</h1>
+        <p>Reference: <strong>${payment.reference}</strong></p>
+        <p id="payment-status">We are checking your payment status. Do not close this page until you have entered your PIN.</p>`;
+      let attempts = 0;
+      const poll = setInterval(async () => {
+        attempts += 1;
+        try {
+          const response = await fetch(`${API_BASE}/api/payments/verify/${encodeURIComponent(payment.reference)}/`);
+          const result = await response.json();
+          if (result.verified) {
+            clearInterval(poll);
+            document.getElementById('payment-status').innerHTML = '<strong>Payment confirmed.</strong> Your booking is complete.';
+          } else if (result.status === 'failed') {
+            clearInterval(poll);
+            document.getElementById('payment-status').textContent = 'The payment was not completed. Please return and try again.';
+          }
+        } catch (_) { /* The webhook remains the authoritative confirmation. */ }
+        if (attempts >= 30) clearInterval(poll);
+      }, 6000);
+    }
+  </script>
+</body>
+</html>
