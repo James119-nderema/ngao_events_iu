@@ -182,12 +182,6 @@
         </div>
 
         <div class="grid">
-          <div class="field"><label>Payment method</label>
-            <select name="payment_method">
-              <option value="bank_transfer">Bank transfer</option>
-              <option value="mpesa">M-Pesa</option>
-            </select>
-          </div>
           <div class="field"><label>Currency</label>
             <select name="currency">
               <option value="KSH">KSH</option>
@@ -218,7 +212,7 @@
     // The Django API origin. Set window.NGAO_API_BASE before this script in
     // production, or change this value to your deployed HTTPS API URL.
     // Do not open this file with file://; serve the admin/ folder over HTTP.
-    const API_BASE = window.NGAO_API_BASE || window.PAYMENT_API_BASE || 'https://admin.ngaosports.com' || 'http://127.0.0.1:8000';
+    const API_BASE = window.NGAO_API_BASE || window.PAYMENT_API_BASE || (['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:8000' : window.location.origin);
     const bookingForm = document.getElementById('booking-form');
     const proceedButton = document.getElementById('proceed-payment');
     const parentPhone = bookingForm.elements.parent_phone;
@@ -236,7 +230,7 @@
       const amount = Number(amountInput.value.replace(/,/g, ''));
       const isOverLimit = Number.isFinite(amount) && amount > 250000;
       mpesaMethod.disabled = isOverLimit;
-      if (isOverLimit) {
+      if (isOverLimit && bookingForm.elements.payment_method.value === 'mpesa') {
         bankMethod.checked = true;
         paymentLimitNote.textContent = 'M-Pesa STK Push is limited to KES 250,000 per transaction. Bank transfer has been selected.';
       } else {

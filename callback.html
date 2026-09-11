@@ -3,7 +3,7 @@
 <body><main class="card"><a class="brand" href="index.html">NGAO SPORTS</a><h1 id="title">Verifying your payment</h1><p id="message" class="message" role="status">Please wait while we confirm your transaction.</p><a id="return-link" class="back" href="index.html">Return home</a></main>
 <script>
   // Must match payment.html and PAYSTACK_CALLBACK_URL in Django settings.
-  const API_BASE = window.PAYMENT_API_BASE || 'https://admin.ngaosports.com' || 'http://127.0.0.1:8000';
+  const API_BASE = window.PAYMENT_API_BASE || (['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:8000' : window.location.origin);
   const title = document.getElementById('title');
   const message = document.getElementById('message');
   const reference = new URLSearchParams(window.location.search).get('reference');
