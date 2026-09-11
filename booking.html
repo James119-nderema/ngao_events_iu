@@ -182,6 +182,12 @@
         </div>
 
         <div class="grid">
+          <div class="field"><label>Payment method</label>
+            <select name="payment_method">
+              <option value="bank_transfer">Bank transfer</option>
+              <option value="mpesa">M-Pesa</option>
+            </select>
+          </div>
           <div class="field"><label>Currency</label>
             <select name="currency">
               <option value="KSH">KSH</option>
@@ -199,6 +205,7 @@
             <label class="method"><input type="radio" name="payment_method" value="mpesa" checked><span><strong>M-Pesa STK Push</strong><small>Get an M-Pesa PIN prompt on the parent/guardian phone number entered above.</small></span></label>
             <label class="method"><input type="radio" name="payment_method" value="bank_transfer"><span><strong>Bank transfer</strong><small>View secure Paystack transfer instructions and account details.</small></span></label>
           </div>
+          <small id="payment-limit-note" style="color:#64748b"></small>
         </div>
         <div class="button-row">
           <button id="proceed-payment" type="submit">Proceed to Pay</button>
@@ -215,14 +222,32 @@
     const bookingForm = document.getElementById('booking-form');
     const proceedButton = document.getElementById('proceed-payment');
     const parentPhone = bookingForm.elements.parent_phone;
+    const amountInput = bookingForm.elements.amount;
+    const mpesaMethod = bookingForm.querySelector('input[value="mpesa"]');
+    const bankMethod = bookingForm.querySelector('input[value="bank_transfer"]');
+    const paymentLimitNote = document.getElementById('payment-limit-note');
     const paymentMethods = bookingForm.querySelectorAll('input[name="payment_method"]');
     function updatePaymentRequirements() {
       const isMpesa = bookingForm.elements.payment_method.value === 'mpesa';
       parentPhone.required = isMpesa;
       parentPhone.placeholder = isMpesa ? 'e.g. 0712 345 678 (required for STK Push)' : 'Phone number (optional for bank transfer)';
     }
+    function applyMpesaLimit() {
+      const amount = Number(amountInput.value.replace(/,/g, ''));
+      const isOverLimit = Number.isFinite(amount) && amount > 250000;
+      mpesaMethod.disabled = isOverLimit;
+      if (isOverLimit) {
+        bankMethod.checked = true;
+        paymentLimitNote.textContent = 'M-Pesa STK Push is limited to KES 250,000 per transaction. Bank transfer has been selected.';
+      } else {
+        paymentLimitNote.textContent = '';
+      }
+      updatePaymentRequirements();
+    }
     paymentMethods.forEach(method => method.addEventListener('change', updatePaymentRequirements));
+    amountInput.addEventListener('input', applyMpesaLimit);
     updatePaymentRequirements();
+    applyMpesaLimit();
     bookingForm.addEventListener('submit', async function (e) {
       e.preventDefault();
       if (!bookingForm.reportValidity()) return;
