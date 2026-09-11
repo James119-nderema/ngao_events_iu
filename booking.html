@@ -218,7 +218,7 @@
     // The Django API origin. Set window.NGAO_API_BASE before this script in
     // production, or change this value to your deployed HTTPS API URL.
     // Do not open this file with file://; serve the admin/ folder over HTTP.
-    const API_BASE = window.NGAO_API_BASE ||  'https://admin.ngaosports.com' || 'http://127.0.0.1:8000';
+    const API_BASE = window.NGAO_API_BASE || window.PAYMENT_API_BASE || 'https://admin.ngaosports.com' || 'http://127.0.0.1:8000';
     const bookingForm = document.getElementById('booking-form');
     const proceedButton = document.getElementById('proceed-payment');
     const parentPhone = bookingForm.elements.parent_phone;
