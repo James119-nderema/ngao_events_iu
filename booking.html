@@ -227,7 +227,10 @@
     // The Django API origin. Set window.NGAO_API_BASE before this script in
     // production, or change this value to your deployed HTTPS API URL.
     // Do not open this file with file://; serve the admin/ folder over HTTP.
-    const API_BASE = window.NGAO_API_BASE || window.PAYMENT_API_BASE || (['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:8000' : window.location.origin);
+    // The public event website is hosted separately on Vercel. Its /api path
+    // does not reach Django, so production submissions use the Django host.
+    // A deployment can still override this before the script with NGAO_API_BASE.
+    const API_BASE = window.NGAO_API_BASE || window.PAYMENT_API_BASE || (['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:8000' : 'https://admin.ngaosports.com');
     const bookingForm = document.getElementById('booking-form');
     const proceedButton = document.getElementById('proceed-payment');
     const parentPhone = bookingForm.elements.parent_phone;
@@ -305,7 +308,7 @@
         if (!response.ok) {
           // A Django debug/404 page is HTML, not JSON. Keep its markup out of
           // the user-facing error and give an actionable endpoint message.
-          throw new Error(json?.error || `Payment API returned ${response.status}. Check that Django is running the NgaoSports backend on port 8000.`);
+          throw new Error(json?.error || `Registration API returned ${response.status}. Please try again or contact Ngao Sports.`);
         }
         if (!json) throw new Error('Payment API returned an unexpected response.');
         if (json.pay_later) {
