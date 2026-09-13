@@ -46,6 +46,8 @@
       gap: 8px;
       margin-bottom: 18px;
     }
+    fieldset.field { border: 0; padding: 0; min-inline-size: 0; }
+    legend { font-weight: 700; color: #1f2937; padding: 0; margin-bottom: 8px; }
     label {
       font-weight: 700;
       color: #1f2937;
@@ -59,6 +61,11 @@
       background: #fff;
     }
     textarea { min-height: 110px; resize: vertical; }
+    .choice-group { display: flex; flex-wrap: wrap; gap: 10px 16px; }
+    .choice { display: inline-flex; align-items: center; gap: 7px; font-weight: 400; cursor: pointer; }
+    .choice input, .declaration input { width: auto; padding: 0; }
+    .conditional-field[hidden] { display: none; }
+    .help-text { color: #64748b; font-size: .9rem; margin: 0; }
     .full { grid-column: 1 / -1; }
     .button-row {
       display: flex;
@@ -101,13 +108,12 @@
         <div class="grid">
           <div class="field full"><label>Full Name (as on Passport)</label><input name="full_name" required></div>
           <div class="field"><label>Date of Birth</label><input name="date_of_birth" type="date"></div>
-          <div class="field"><label>Gender</label><input name="gender"></div>
+          <div class="field"><label for="gender">Gender</label><select id="gender" name="gender" required><option value="" selected disabled>Select gender</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
           <div class="field"><label>School Name</label><input name="school_name"></div>
           <div class="field"><label>Class / Form</label><input name="class_form"></div>
           <div class="field"><label>Passport Number</label><input name="passport_number"></div>
           <div class="field"><label>Passport Expiry Date</label><input name="passport_expiry" type="date"></div>
           <div class="field"><label>Nationality</label><input name="nationality"></div>
-          <div class="field full"><label>Student Email / Phone</label><input name="student_contact"></div>
         </div>
 
         <h2>Section B: Parent / Guardian Information</h2>
@@ -116,23 +122,33 @@
           <div class="field"><label>Relationship</label><input name="parent_relationship"></div>
           <div class="field"><label>Phone Number (WhatsApp)</label><input name="parent_phone"></div>
           <div class="field"><label>Email Address</label><input name="parent_email" type="email" required></div>
-          <div class="field full"><label>Alternative Emergency Contact & Number</label><input name="emergency_contact"></div>
+          <div class="field full"><label>Alternative Emergency Contact & Number</label><input name="emergency_contact" required></div>
         </div>
 
         <h2>Section C: Sports Profile</h2>
         <div class="grid">
-          <div class="field full"><label>Sport(s) to compete in</label><input name="sports_choices" placeholder="Chess, Swimming, Football"></div>
-          <div class="field"><label>Current level</label><input name="current_level"></div>
-          <div class="field"><label>Achievements / medals / certificates</label><textarea name="achievements"></textarea></div>
-          <div class="field"><label>Own sports equipment / kit</label><input name="equipment"></div>
-          <div class="field"><label>Coaching club or academy</label><input name="coaching_club"></div>
+          <fieldset class="field full"><legend>Sport(s) to compete in</legend><div class="choice-group">
+            <label class="choice"><input type="checkbox" name="sports_choices" value="Chess"> Chess</label>
+            <label class="choice"><input type="checkbox" name="sports_choices" value="Swimming"> Swimming</label>
+            <label class="choice"><input type="checkbox" name="sports_choices" value="Football"> Football</label>
+            <label class="choice"><input type="checkbox" name="sports_choices" value="Basketball"> Basketball</label>
+            <label class="choice"><input type="checkbox" name="sports_choices" value="Table Tennis"> Table Tennis</label>
+            <label class="choice"><input type="checkbox" name="sports_choices" value="Badminton"> Badminton</label>
+            <label class="choice"><input type="checkbox" name="sports_choices" value="Athletics"> Athletics</label>
+            <label class="choice"><input type="checkbox" name="sports_choices" value="Skating"> Skating</label>
+          </div><p class="help-text">Select all that apply.</p></fieldset>
+          <div class="field"><label for="current-level">Current level</label><select id="current-level" name="current_level" required><option value="" selected disabled>Select level</option><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option></select></div>
+          <div class="field"><label>Achievements / medals / certificates</label><textarea name="achievements" required></textarea></div>
+          <div class="field"><label for="equipment">Own sports equipment / kit</label><select id="equipment" name="equipment"><option value="" selected disabled>Select an option</option><option value="No">No</option><option value="Yes">Yes</option></select></div>
+          <div class="field conditional-field" id="equipment-details-field" hidden><label for="equipment-details">If yes, specify the equipment</label><input id="equipment-details" name="equipment_details"></div>
+          <div class="field"><label>Coaching club or academy</label><input name="coaching_club" required></div>
         </div>
 
         <h2>Section D: Education & Culture Exchange</h2>
         <div class="grid">
-          <div class="field full"><label>Why do you want to join this exchange program?</label><textarea name="motivation"></textarea></div>
-          <div class="field full"><label>What skill or cultural aspect of Kenya would you like to share in Dubai?</label><textarea name="cultural_aspect"></textarea></div>
-          <div class="field full"><label>What do you hope to learn / connect / explore in Dubai?</label><textarea name="learn_hope"></textarea></div>
+          <div class="field full"><label>Why do you want to join this exchange program?</label><textarea name="motivation" required></textarea></div>
+          <div class="field full"><label>What skill or cultural aspect of Kenya would you like to share in Dubai?</label><textarea name="cultural_aspect" required></textarea></div>
+          <div class="field full"><label>What do you hope to learn / connect / explore in Dubai?</label><textarea name="learn_hope" required></textarea></div>
           <div class="field"><label>Have you travelled outside Kenya before?</label>
             <select name="previous_travel">
               <option value="false">No</option>
@@ -143,7 +159,8 @@
 
         <h2>Section E: Health, Medical & Diet</h2>
         <div class="grid">
-          <div class="field full"><label>Any medical condition / allergies / asthma?</label><textarea name="medical_conditions"></textarea></div>
+          <fieldset class="field full"><legend>Any medical condition, allergies or asthma?</legend><div class="choice-group"><label class="choice"><input type="radio" name="has_medical_condition" value="Yes" required> Yes</label><label class="choice"><input type="radio" name="has_medical_condition" value="No"> No</label></div></fieldset>
+          <div class="field full conditional-field" id="medical-details-field" hidden><label for="medical-details">If yes, please explain</label><textarea id="medical-details" name="medical_conditions"></textarea></div>
           <div class="field full"><label>Are you on any current medication?</label><textarea name="medication"></textarea></div>
           <div class="field"><label>Food allergies / dietary restrictions</label><input name="dietary_restrictions"></div>
           <div class="field"><label>Swimming ability</label><input name="swimming_ability"></div>
@@ -155,7 +172,7 @@
           </div>
         </div>
 
-        <h2>Section F: Travel & Logistics</h2>
+        <h2>Section F: Safe Travel & Logistics</h2>
         <div class="grid">
           <div class="field"><label>Do you have a valid Kenyan Birth Certificate?</label>
             <select name="birth_certificate">
@@ -171,14 +188,11 @@
             </select>
           </div>
           <div class="field"><label>T-shirt size</label><input name="tshirt_size"></div>
-          <div class="field"><label>Shoe size</label><input name="shoe_size"></div>
-          <div class="field"><label>Who will cater for trip cost?</label><input name="payer"></div>
-          <div class="field full"><label>How did you hear about this program?</label><input name="heard_about"></div>
         </div>
 
         <h2>Section G: Parent Declaration</h2>
         <div class="field full">
-          <label><input type="checkbox" name="parent_declaration" value="true" /> I authorize my child to travel to Dubai from 3rd - 10th Dec for the Exchange Program and participate in sports.</label>
+          <label class="declaration"><input type="checkbox" name="parent_declaration" value="true" required /> I authorize my child to travel to Dubai from 3rd - 10th Dec for the Exchange Program and participate in sports.</label>
         </div>
 
         <div class="grid">
@@ -198,6 +212,7 @@
           <div class="methods">
             <label class="method"><input type="radio" name="payment_method" value="mpesa" checked><span><strong>M-Pesa STK Push</strong><small>Get an M-Pesa PIN prompt on the parent/guardian phone number entered above.</small></span></label>
             <label class="method"><input type="radio" name="payment_method" value="bank_transfer"><span><strong>Bank transfer</strong><small>View secure Paystack transfer instructions and account details.</small></span></label>
+            <label class="method"><input type="radio" name="payment_method" value="pay_later"><span><strong>Pay later</strong><small>Save this registration now and arrange payment later.</small></span></label>
           </div>
           <small id="payment-limit-note" style="color:#64748b"></small>
         </div>
@@ -221,10 +236,28 @@
     const bankMethod = bookingForm.querySelector('input[value="bank_transfer"]');
     const paymentLimitNote = document.getElementById('payment-limit-note');
     const paymentMethods = bookingForm.querySelectorAll('input[name="payment_method"]');
+    const equipment = bookingForm.elements.equipment;
+    const equipmentDetails = bookingForm.elements.equipment_details;
+    const equipmentDetailsField = document.getElementById('equipment-details-field');
+    const medicalDetails = bookingForm.elements.medical_conditions;
+    const medicalDetailsField = document.getElementById('medical-details-field');
     function updatePaymentRequirements() {
       const isMpesa = bookingForm.elements.payment_method.value === 'mpesa';
       parentPhone.required = isMpesa;
       parentPhone.placeholder = isMpesa ? 'e.g. 0712 345 678 (required for STK Push)' : 'Phone number (optional for bank transfer)';
+    }
+    function toggleConditionalFields() {
+      const hasEquipment = equipment.value === 'Yes';
+      equipmentDetailsField.hidden = !hasEquipment;
+      equipmentDetails.required = hasEquipment;
+      if (!hasEquipment) equipmentDetails.value = '';
+      const hasMedicalCondition = bookingForm.elements.has_medical_condition.value === 'Yes';
+      medicalDetailsField.hidden = !hasMedicalCondition;
+      medicalDetails.required = hasMedicalCondition;
+      if (!hasMedicalCondition) medicalDetails.value = '';
+    }
+    function updateSubmitLabel() {
+      proceedButton.textContent = bookingForm.elements.payment_method.value === 'pay_later' ? 'Save Registration' : 'Proceed to Pay';
     }
     function applyMpesaLimit() {
       const amount = Number(amountInput.value.replace(/,/g, ''));
@@ -238,15 +271,21 @@
       }
       updatePaymentRequirements();
     }
-    paymentMethods.forEach(method => method.addEventListener('change', updatePaymentRequirements));
+    paymentMethods.forEach(method => method.addEventListener('change', () => { updatePaymentRequirements(); updateSubmitLabel(); }));
     amountInput.addEventListener('input', applyMpesaLimit);
+    equipment.addEventListener('change', toggleConditionalFields);
+    bookingForm.querySelectorAll('input[name="has_medical_condition"]').forEach(input => input.addEventListener('change', toggleConditionalFields));
     updatePaymentRequirements();
     applyMpesaLimit();
+    toggleConditionalFields();
+    updateSubmitLabel();
     bookingForm.addEventListener('submit', async function (e) {
       e.preventDefault();
       if (!bookingForm.reportValidity()) return;
       const form = new FormData(bookingForm);
       const payload = Object.fromEntries(form.entries());
+      payload.sports_choices = form.getAll('sports_choices');
+      if (payload.equipment === 'Yes' && payload.equipment_details) payload.equipment = `Yes: ${payload.equipment_details}`;
       payload.previous_travel = payload.previous_travel === 'true';
       payload.insurance = payload.insurance === 'true';
       payload.birth_certificate = payload.birth_certificate === 'true';
@@ -254,7 +293,7 @@
       payload.parent_declaration = form.get('parent_declaration') === 'true';
 
       proceedButton.disabled = true;
-      proceedButton.textContent = payload.payment_method === 'mpesa' ? 'Sending M-Pesa prompt…' : 'Opening bank transfer…';
+      proceedButton.textContent = payload.payment_method === 'pay_later' ? 'Saving registration…' : payload.payment_method === 'mpesa' ? 'Sending M-Pesa prompt…' : 'Opening bank transfer…';
       try {
         const response = await fetch(`${API_BASE}/api/book/`, {
         method: 'POST',
@@ -269,7 +308,9 @@
           throw new Error(json?.error || `Payment API returned ${response.status}. Check that Django is running the NgaoSports backend on port 8000.`);
         }
         if (!json) throw new Error('Payment API returned an unexpected response.');
-        if (json.authorization_url) {
+        if (json.pay_later) {
+          showPayLaterConfirmation(json);
+        } else if (json.authorization_url) {
           window.location.href = json.authorization_url;
         } else if (payload.payment_method === 'mpesa' && json.reference) {
           showPaymentPending(json);
@@ -280,7 +321,7 @@
         console.error(err);
         alert(err.message || 'Payment initialization failed.');
         proceedButton.disabled = false;
-        proceedButton.textContent = 'Proceed to Pay';
+        updateSubmitLabel();
       }
     });
 
@@ -307,6 +348,14 @@
         } catch (_) { /* The webhook remains the authoritative confirmation. */ }
         if (attempts >= 30) clearInterval(poll);
       }, 6000);
+    }
+    function showPayLaterConfirmation(booking) {
+      const panel = document.querySelector('.panel');
+      panel.innerHTML = `
+        <div class="intro"><strong>Registration saved</strong><br>Your place has been recorded and payment can be arranged later.</div>
+        <h1>Thank you for registering</h1>
+        <p>Booking reference: <strong>${booking.booking_id}</strong></p>
+        <p>We will contact the parent or guardian with the next payment steps.</p>`;
     }
   </script>
 </body>
